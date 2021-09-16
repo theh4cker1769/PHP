@@ -23,7 +23,7 @@ $user_data = check_login($conn);
 
     <a href="logout.php">Logout</a>
     <h1>Hello World From Israel and Harshavardhan Reddy</h1>
-
+    <h2>Hello <?php echo $user_data['username'];  ?> </h2>
 </body>
 
 </html>
