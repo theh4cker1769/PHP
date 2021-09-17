@@ -60,7 +60,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
         <input type="text" placeholder="username" name="user_name">
         <input type="password" placeholder="password" name="password">
         <input type="submit" value="Login">
-
+        <a href="forgetpassword.php">Forget Password</a>
+        <br>
         <a href="signup.php">Sign UP</a>
     </form>
 </body>
