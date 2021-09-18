@@ -18,12 +18,22 @@ session_start();
         {
             //save to database
 
-            $user_id = random_num(20);
-            $query = "insert into users (user_id, name, username, email, phoneno, password) values ('$user_id', '$name', '$username', '$email', '$phoneno', '$password')";
 
-            mysqli_query($conn, $query);
-            header("Location: login.php");
-            die;
+            $usernamequery = "select * from users where username = '$username'";
+
+            $userresult = mysqli_query($conn, $usernamequery);
+
+            if (mysqli_num_rows($userresult) > 0) {
+                echo 'Username is already there';
+            }
+            else{
+                $user_id = random_num(20);
+                $query = "insert into users (user_id, name, username, email, phoneno, password) values ('$user_id', '$name', '$username', '$email', '$phoneno', '$password')";
+                mysqli_query($conn, $query);
+                header("Location: login.php");
+                die;
+            }
+            
         }
         else
         {
