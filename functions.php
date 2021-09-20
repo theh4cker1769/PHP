@@ -37,5 +37,14 @@ function random_num($length)
     return $text;
 }
 
+function getComments($conn){
+    $get = "select * from comments";
+    $getresults = mysqli_query($conn, $get);
+    while($row = mysqli_fetch_assoc($getresults)){
+
+        echo $row['name'].'<br>';
+        echo $row['message'].'<br>';
+    }
+}
 
 ?>

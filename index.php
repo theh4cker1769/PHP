@@ -52,6 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <textarea name="commentmsg" cols="30" rows="10" placeholder="Comment"></textarea>
         <input type="submit" value="Submit">
     </form>
+    
+    <?php
+        getComments($conn);
+        echo $test;
+    ?>
 </body>
 
 </html>
