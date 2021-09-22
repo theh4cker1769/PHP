@@ -1,14 +1,18 @@
 <?php
 session_start();
+
 include("connection.php");
 include("functions.php");
 
-$user_data = check_login($conn);
 
+
+// images insertion in database
 if (isset($_POST['submit'])) {
-    $uploadFolder = 'uploads/';
+
+    $uploadsDir = "uploads/";
     $allowedFileType = array('jpg', 'png', 'jpeg');
 
+    // Velidate if files exist
     if (!empty(array_filter($_FILES['fileUpload']['name']))) {
 
         // Loop through file items
@@ -16,8 +20,9 @@ if (isset($_POST['submit'])) {
             // Get files upload path
             $fileName        = $_FILES['fileUpload']['name'][$id];
             $tempLocation    = $_FILES['fileUpload']['tmp_name'][$id];
-            $targetFilePath  = $uploadFolder . $fileName;
+            $targetFilePath  = $uploadsDir . $fileName;
             $fileType        = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+            $uploadOk = 1;
 
             if (in_array($fileType, $allowedFileType)) {
                 if (move_uploaded_file($tempLocation, $targetFilePath)) {
@@ -69,46 +74,136 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <style>
-        .imgGallery img {
-            padding: 8px;
-            max-width: 100px;
-        }
-    </style>
+    <title>Gallery</title>
 </head>
+<style>
+    .container {
+        max-width: 450px;
+    }
+
+    .imgGallery img {
+        padding: 8px;
+        max-width: 100px;
+    }
+</style>
 
 <body>
 
-    <form action="" method="post" enctype="multipart/form-data" class="mb-3" style="width: 30%;margin: 0 auto;margin-top: 50px;">
-        <div class="imgGallery">
-            <!-- image preview -->
-        </div>
 
-        <!-- Display response messages -->
-        <?php if (!empty($response)) { ?>
-            <div class="alert <?php echo $response["status"]; ?>">
-                <?php echo $response["message"]; ?>
+    <div class="container mt-5">
+        <form action="" method="post" enctype="multipart/form-data" class="mb-3">
+            <h3 class="text-center mb-5">This is Israil's Gallery</h3>
+
+            <div class="user-image mb-3 text-center">
+                <div class="imgGallery">
+                    <!-- Image preview -->
+                </div>
             </div>
-        <?php } ?>
 
-        <div class="custom-file">
-            <input type="file" name="fileUpload[]" class="custom-file-input" id="chooseFile" multiple>
-            <label class="custom-file-label" for="chooseFile">Select file</label>
+            <div class="custom-file">
+                <input type="file" name="fileUpload[]" class="custom-file-input" id="chooseFile" multiple>
+                <label class="custom-file-label" for="chooseFile">Select file</label>
+            </div>
+
+            <button type="submit" name="submit" class="btn btn-primary btn-block mt-4">
+                Upload Files
+            </button>
+        </form>
+
+
+
+        <div class="spacer" style="height: 100px;"></div>
+        <div id="carouselExampleIndicators" class="container carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <?php
+                $sql = "SELECT * FROM imageupload";
+                $result =  mysqli_query($conn, $sql);
+                $number_of_images = mysqli_num_rows($result);
+                for ($i = 0; $i < $number_of_images; $i++) {
+                ?>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="<?php echo $i; ?>" <?php if ($i == 0) {
+                                                                                                        echo 'class="active"';
+                                                                                                    } ?>></li>
+                <?php
+                }
+                ?>
+            </ol>
+            <div class="carousel-inner">
+
+
+                <?php
+
+                for ($i = 0; $i < $number_of_images; $i++) {
+                    $row = mysqli_fetch_assoc($result);
+                ?>
+
+                    <div class="carousel-item <?php if ($i == 0) {
+                                                    echo "active";
+                                                } ?>">
+                        <img src="uploads/<?php echo $row['images']; ?>" class="d-block w-100" alt="...">
+                    </div>
+
+                <?php
+                }
+                ?>
+
+
+
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+    <div class="spcacer" style="height: 100px;"></div>
+
+    <!-- Gallery Content -->
+    <div class="container-fluid">
+
+        <h1 class="fw-light text-center text-lg-start mt-4 mb-0">Thumbnail Gallery</h1>
+
+        <hr class="mt-2 mb-5">
+
+        <div class="row text-center text-lg-start">
+            <?php
+            $sql = "SELECT * FROM imageupload";
+            $result =  mysqli_query($conn, $sql);
+            $number_of_images = mysqli_num_rows($result);
+            for ($i = 0; $i < $number_of_images; $i++) {
+                $row = mysqli_fetch_assoc($result);
+
+            ?>
+                <div class="col-lg-3 col-md-4 col-6">
+                    <a href="#" class="d-block mb-4 h-100">
+                        <img src="uploads/<?php echo $row['images']; ?>" class="img-fluid img-thumbnail" alt="">
+                    </a>
+                </div>
+
+            <?php
+            }
+            ?>
+
+
+           
         </div>
 
-        <button type="submit" name="submit" class="btn btn-primary btn-block mt-4">
-            Upload Files
-        </button>
-    </form>
+    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
     <script>
         $(function() {
-            // Image preview with js
-            var imgPreview = function(input, imgPreviewPlace) {
+
+            var multiImgPreview = function(input, imgPreviewPlaceholder) {
 
                 if (input.files) {
                     var filesAmount = input.files.length;
@@ -116,21 +211,23 @@ if (isset($_POST['submit'])) {
                     for (i = 0; i < filesAmount; i++) {
                         var reader = new FileReader();
 
-                        reader.onload = function(e) {
-                            $($.parseHTML('<img>')).attr('src', e.target.result).appendTo(imgPreviewPlace);
+                        reader.onload = function(event) {
+                            $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
                         }
 
                         reader.readAsDataURL(input.files[i]);
                     }
                 }
-            }
+
+            };
 
             $('#chooseFile').on('change', function() {
-                imgPreview(this, 'div.imgGallery');
+                multiImgPreview(this, 'div.imgGallery');
             });
-
         });
     </script>
+
+
 </body>
 
 </html>
