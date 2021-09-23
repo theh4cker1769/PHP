@@ -64,6 +64,21 @@ if (isset($_POST['submit'])) {
     }
 }
 
+
+function php_func($conn)
+{
+    if (isset($_GET['deleteSubmit'])) {
+        $storeId = $_GET['idimage'];
+
+        $querySelect = "select image from imageupload where id = '$storeId'";
+        mysqli_query($conn, $querySelect);
+
+        $queryDel = "delete from imageupload where id = '$storeId'";
+        mysqli_query($conn, $queryDel);
+    }
+}
+
+
 ?>
 
 
@@ -183,6 +198,11 @@ if (isset($_POST['submit'])) {
                 <div class="col-lg-3 col-md-4 col-6">
                     <a href="#" class="d-block mb-4 h-100">
                         <img src="uploads/<?php echo $row['images']; ?>" class="img-fluid img-thumbnail" alt="">
+                        <form action="" method="GET">
+                            <input type="hidden" name="idimage" value="<?php echo $row['id']; ?>">
+                            <button name="deleteSubmit" onclick="clickMe()">Delete</button>
+                        </form>
+
                     </a>
                 </div>
 
@@ -191,9 +211,11 @@ if (isset($_POST['submit'])) {
             ?>
 
 
-           
-        </div>
 
+        </div>
+        <?php
+
+        ?>
     </div>
 
 
@@ -201,6 +223,21 @@ if (isset($_POST['submit'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
     <script>
+        function clickMe() {
+            var result = "<?php php_func($conn); ?>"
+            document.write(result);
+        }
+        $('.button-delete').click(function() {
+            $.ajax({
+                type: "GET",
+                url: "some.php",
+                data: {
+                    name: "John"
+                }
+            }).done(function(msg) {
+                alert("Data Saved: " + msg);
+            });
+        });
         $(function() {
 
             var multiImgPreview = function(input, imgPreviewPlaceholder) {
