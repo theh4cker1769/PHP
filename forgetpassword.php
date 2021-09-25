@@ -52,6 +52,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 </head>
 
 <body>
+    <?php include 'includes/header.php' ?>
     <h1>Forget Password</h1>
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])  ?>" method="POST">
 

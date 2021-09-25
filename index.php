@@ -20,9 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $query = "insert into comments (name, message) values('$name', '$message')";
         mysqli_query($conn, $query);
-
-    }
-    else {
+    } else {
         echo '<script>alert("Please Login")</script>';
     }
 }
@@ -39,9 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 
 <body>
+    <?php $page = 'home'; include 'includes/header.php' ?>
 
     <a href="logout.php">Logout</a>
     <h1>Hello World From Israel and Harshavardhan Reddy</h1>
@@ -52,10 +52,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <textarea name="commentmsg" cols="30" rows="10" placeholder="Comment"></textarea>
         <input type="submit" value="Submit">
     </form>
-    
+
     <?php
-        getComments($conn);
+    getComments($conn);
     ?>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

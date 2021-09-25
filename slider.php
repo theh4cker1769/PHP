@@ -4,7 +4,7 @@ session_start();
 include("connection.php");
 include("functions.php");
 
-
+$user_data = check_login($conn);
 
 // images insertion in database
 if (isset($_POST['submit'])) {
@@ -104,7 +104,7 @@ function php_func($conn)
 </style>
 
 <body>
-
+    <?php $page = 'slider'; include 'includes/header.php' ?>
 
     <div class="container mt-5">
         <form action="" method="post" enctype="multipart/form-data" class="mb-3">
